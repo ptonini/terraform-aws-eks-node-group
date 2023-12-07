@@ -66,29 +66,28 @@ resource "aws_eks_node_group" "this" {
   instance_types = [
     var.instance_type
   ]
-  labels = {
-    nodePoolName  = var.name
-    nodePoolClass = var.node_pool_class
-  }
+  labels = var.labels
+
   dynamic "taint" {
     for_each = var.taints
+
     content {
       effect = taint.value.effect
       key    = taint.value.key
     }
   }
+
   scaling_config {
     desired_size = var.desired_size
     max_size     = coalesce(var.max_size, var.desired_size)
     min_size     = coalesce(var.min_size, var.desired_size)
   }
+
   launch_template {
     version = aws_launch_template.this.latest_version
     id      = aws_launch_template.this.id
   }
-  depends_on = [
-    module.role
-  ]
+
   lifecycle {
     ignore_changes = [
       # scaling_config.0.desired_size

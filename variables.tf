@@ -28,6 +28,11 @@ variable "node_pool_class" {
   default = "general"
 }
 
+variable "labels" {
+  type    = map(string)
+  default = null
+}
+
 variable "taints" {
   type = map(object({
     effect = string
@@ -37,6 +42,7 @@ variable "taints" {
 }
 
 variable "tags" {
+  type    = map(string)
   default = {}
 }
 
